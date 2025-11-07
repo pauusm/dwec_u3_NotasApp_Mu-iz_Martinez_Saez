@@ -140,16 +140,34 @@ function onAccionNota(e) {
   guardarEstado();
   render();
 }
-
+//RF7
+//Intenta abrir una ventana nueva. Si el navegador bloquea el popup, avisa al usuario.
 function abrirPanelDiario() {
+    //Abrir el panel desde la app principal
   const ref = window.open("panel.html", "PanelDiario", "width=420,height=560");
   if (!ref) { alert("Pop-up bloqueado. Permita ventanas emergentes."); return; }
+    //Enviar los datos al panel con snapshot con notas filtradas
   const snapshot = { tipo: "SNAPSHOT", notas: filtrarNotas(estado.notas) };
   setTimeout(() => { try { ref.postMessage(snapshot, "*"); } catch {} }, 400);
 }
 
 window.addEventListener("message", (ev) => {
+   //Validar origen
+   if (ev.origin !== location.origin) return; // ignora mensajes de otros sitios
   if (!ev.data || typeof ev.data !== "object") return;
+//Validación de tipo mensaje 
+  const mensaje = ev.data;
+  //Si no es un mensaje o un objeto 
+  if(!mensaje || typeof mensaje !== "object") return;
+  if (mensaje.tipo === "SNAPSHOT"){
+    
+  
+  if(ev.data.tipo === "SNAPSHOT" && Array.isArray(ev.data.notas)) {
+    renderNotas(ev.data.notas);
+  }
+
+
+  
   if (ev.data.tipo === "BORRADO") {
     const id = ev.data.id;
     estado.notas = estado.notas.filter(n => n.id !== id)
