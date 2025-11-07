@@ -125,7 +125,7 @@ function onSubmitNota(e) {
     render();
   } catch (err) { alert(err.message); }
 }
-
+//
 function onAccionNota(e) {
   const btn = e.currentTarget;
   const id = btn.getAttribute("data-id");
