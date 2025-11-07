@@ -191,3 +191,4 @@ function togglePantallaCompleta() {
     console.log("Pantalla completa activada");
   }
 }
+holi
