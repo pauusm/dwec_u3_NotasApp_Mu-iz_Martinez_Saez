@@ -162,3 +162,14 @@ window.addEventListener("message", (ev) => {
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[c]));
 }
+
+// === Control de pantalla completa (RF6) ===
+function togglePantallaCompleta() {
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+    console.log("Pantalla completa desactivada");
+  } else {
+    document.documentElement.requestFullscreen();
+    console.log("Pantalla completa activada");
+  }
+}
