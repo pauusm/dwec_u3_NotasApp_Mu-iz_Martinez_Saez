@@ -2,14 +2,6 @@
 
 /** @typedef {{ id:string, texto:string, fecha:string, prioridad:number, completada?:boolean }} Nota */
 
-/**
-Persistencia (RF9) → guardar y recuperar notas desde localStorage o cookies.
-Control del viewport/pantalla completa (RF6) → scrollIntoView() y botón de fullscreen.
-Validación de origen en comunicación (RF7, CT5) → no usar "*".
-Incluir timestamp y filtro en snapshot (RF10).
-README y GUIA_USUARIO.md con documentación, capturas y justificación.
-GitHub
-*/
 
 const estado = {
   notas: /** @type {Nota[]} */ ([]),
@@ -52,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("formNota").addEventListener("submit", onSubmitNota);
   document.getElementById("btnPanelDiario").addEventListener("click", abrirPanelDiario);
+  document.getElementById("btnPantallaCompleta").addEventListener("click", togglePantallaCompleta);
   render();
 });
 
