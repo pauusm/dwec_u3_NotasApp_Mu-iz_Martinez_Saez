@@ -1,0 +1,9 @@
+:root { --font: system-ui, sans-serif; }
+* { box-sizing: border-box; }
+body { font-family: var(--font); margin: 0; line-height: 1.5; }
+header, footer { padding: 1rem; background: #f2f2f2; }
+main { padding: 1rem; }
+nav button { margin-right: .5rem; }
+#listaNotas { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.nota { border: 1px solid #ddd; border-radius: 8px; padding: .75rem; }
+.nota header { display: flex; justify-content: space-between; align-items: center; }

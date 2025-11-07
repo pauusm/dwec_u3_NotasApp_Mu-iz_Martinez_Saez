@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Panel Diario — NotasApp</title>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 0; padding: 1rem; line-height: 1.5; }
+    header, footer { padding-bottom: .5rem; border-bottom: 1px solid #eee; margin-bottom: .75rem; }
+    .nota { border: 1px solid #ddd; border-radius: 8px; padding: .5rem; margin-bottom: .5rem; }
+    .nota header { display:flex; justify-content: space-between; }
+    .vacio { opacity: .7; font-style: italic; }
+    button { padding:.4rem .6rem; border:1px solid #ccc; border-radius:8px; background:#fff; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Panel Diario</h1>
+    <p>Notas de hoy.</p>
+  </header>
+  <main id="contenedor"><p class="vacio">Esperando datos…</p></main>
+  <footer><small>© DWEC — U3</small></footer>
+
+  <script>
+    const cont = document.getElementById('contenedor');
+    window.addEventListener('message', (ev)=>{
+      if (!ev.data || ev.data.tipo !== 'SNAPSHOT') return;
+      render(filtrarHoy(ev.data.notas));
+    });
+    function render(notas) {
+      cont.innerHTML = '';
+      if (!notas || !notas.length) { cont.innerHTML = '<p class="vacio">No hay notas para hoy.</p>'; return; }
+      for (const n of notas) {
+        const art = document.createElement('article');
+        art.className = 'nota';
+        art.innerHTML = '<header><strong>[P'+n.prioridad+'] '+escapeHtml(n.texto)+'</strong>'
+                      + '<time datetime="'+n.fecha+'">'+formatDate(n.fecha)+'</time></header>'
+                      + '<footer><button data-id="'+n.id+'">Borrar</button></footer>';
+        cont.appendChild(art);
+      }
+      cont.querySelectorAll('button[data-id]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const id = btn.getAttribute('data-id');
+          if (window.opener) window.opener.postMessage({ tipo:'BORRADO', id }, '*');
+          btn.closest('.nota').remove();
+        });
+      });
+    }
+    function filtrarHoy(notas) {
+      const hoy = new Date().toISOString().slice(0,10);
+      return (notas||[]).filter(n=>n.fecha===hoy);
+    }
+    function formatDate(ymd) {
+      const d = new Date(ymd);
+      try { return new Intl.DateTimeFormat(navigator.language||'es-ES',{ dateStyle:'medium'}).format(d); }
+      catch { return d.toLocaleDateString(); }
+    }
+    function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])); }
+  </script>
+</body>
+</html>
